@@ -444,7 +444,15 @@ namespace CurveUnfolder
             if (openDialog.ShowDialog(Owner) == true)
             {
                 var svg = new SvgDocument();
-                svg.Load(openDialog.FileName);
+                try
+                {
+                    svg.Load(openDialog.FileName);
+                }
+                catch
+                {
+                    MessageBox.Show(Owner, "При чтении файла произошла ошибка", "Ошибка чтения файла", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
+                    return;
+                }
 
                 if (svg.Paths.Count == 0)
                     MessageBox.Show(Owner, "Кривые не найдены!", "Ошибка чтения файла", MessageBoxButton.OK, MessageBoxImage.Exclamation, MessageBoxResult.OK);
