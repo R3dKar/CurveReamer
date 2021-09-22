@@ -1,0 +1,17 @@
+﻿<Window x:Class="CurveReamer.AboutWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:CurveReamer"
+        mc:Ignorable="d"
+        Title="О программе" WindowStartupLocation="CenterOwner" Height="140" Width="230" ResizeMode="NoResize" WindowStyle="ToolWindow">
+    <StackPanel>
+        <TextBlock FontSize="30" HorizontalAlignment="Center">Автор: <Run Foreground="Red">R3d</Run><Run Foreground="#232427">Kar</Run></TextBlock>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+            <TextBlock Margin="0 0 3 0" FontSize="20" TextDecorations="Underline" Text="GitHub" Cursor="Hand" MouseLeftButtonUp="NavigateGitHub"/>
+            <TextBlock Margin="3 0 0 0" FontSize="20" TextDecorations="Underline" Foreground="#ff0d4575" Text="Steam" Cursor="Hand" MouseLeftButtonUp="NavigateSteam"/>
+        </StackPanel>
+        <TextBlock TextAlignment="Right" Text="v1.3" HorizontalAlignment="Stretch" FontSize="20" Margin="0 3 3 0"/>
+    </StackPanel>
+</Window>

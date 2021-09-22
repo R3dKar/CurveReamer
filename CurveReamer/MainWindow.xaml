@@ -1,0 +1,253 @@
+﻿<Window x:Class="CurveReamer.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:CurveReamer"
+        mc:Ignorable="d"
+        Title="Curve Reamer" MinHeight="720" MinWidth="800" Height="720" Width="800">
+    <Window.DataContext>
+        <local:MainWindowViewModel/>
+    </Window.DataContext>
+    <Window.InputBindings>
+        <KeyBinding Command="{Binding ImportCommand}" Key="I" Modifiers="Ctrl"/>
+        <KeyBinding Command="{Binding ExportCommand}" Key="E" Modifiers="Ctrl"/>
+    </Window.InputBindings>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+
+        <Border BorderBrush="LightGray" BorderThickness="0 0 0 1" Padding="3" Grid.Row="0" Grid.ColumnSpan="2">
+            <Menu Background="White">
+                <MenuItem Header="Файл">
+                    <MenuItem Header="Импорт" InputGestureText="Ctrl+I" Command="{Binding ImportCommand}"/>
+                    <MenuItem Header="Экспорт" InputGestureText="Ctrl+E" Command="{Binding ExportCommand}"/>
+                    <Separator/>
+                    <MenuItem Header="Выход" InputGestureText="Alt+F4" Command="{Binding ExitCommand}"/>
+                </MenuItem>
+                <MenuItem Header="GCode" Command="{Binding OpenGCodeSettingsCommand}"/>
+                <MenuItem Header="О программе" InputGestureText="F1" Command="{Binding ShowAboutProgrammCommand}"/>
+            </Menu>
+        </Border>
+
+
+        <Border Margin="5" Grid.Row="1" BorderBrush="LightGray" BorderThickness="1">
+            <Viewbox>
+                <Grid Margin="3">
+                    <Path Stroke="Black" StrokeThickness="{Binding PathThickness}" Data="{Binding PathGeometry}"/>
+                    <ItemsControl ItemsSource="{Binding Points}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <Grid/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.Resources>
+                            <DataTemplate DataType="{x:Type local:SvgPoint}">
+                                <Path Stroke="{Binding Stroke}" Fill="{Binding Fill}" StrokeThickness="{Binding PointThickness}" Data="{Binding PointPath}" MouseRightButtonDown="SvgRenderPointRightClick" MouseLeftButtonDown="SvgRenderPointClick"/>
+                            </DataTemplate>
+                        </ItemsControl.Resources>
+                    </ItemsControl>
+                </Grid>
+            </Viewbox>
+        </Border>
+
+        <StackPanel Margin="5" Width="250" Grid.Row="1" Grid.Column="1">
+            <GroupBox Header="Объём жидкого акрила" Margin="0 0 0 5" Padding="3">
+                <StackPanel>
+                    <Grid Margin="0 0 0 5">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Text="Площадь: "/>
+                        <TextBox Grid.Column="1" Text="{Binding DocumentArea, Mode=OneWay}" IsReadOnly="True" Background="Transparent" BorderThickness="0" TextWrapping="Wrap"/>
+                    </Grid>
+                    <Grid Margin="0 0 0 5">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Text="Высота: "/>
+                        <TextBox Text="{Binding FloorHeight, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" TextAlignment="Right"/>
+                        <TextBlock Text=" мм" Grid.Column="2"/>
+                    </Grid>
+                    <Grid Margin="0 0 0 5">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Text="Объём акрила: " VerticalAlignment="Center"/>
+                        <TextBox Text="{Binding ResultValue, Mode=OneWay}" ToolTip="{Binding NotAllowedHint}" IsReadOnly="True" Background="Transparent" VerticalAlignment="Center" Grid.Column="1" BorderThickness="0" TextWrapping="Wrap"/>
+                        <ComboBox SelectedIndex="{Binding ValueUnits, Mode=TwoWay, Converter={x:Static local:ValueMeassureUnitsToIndexConverter.Instance}}" Margin="5 0 0 0" Grid.Column="2">
+                            <ComboBoxItem Content="мл"/>
+                            <ComboBoxItem Content="л"/>
+                        </ComboBox>
+                    </Grid>
+                </StackPanel>
+            </GroupBox>
+            <GroupBox Header="Кривая" Margin="0 0 0 5">
+                <StackPanel>
+                    <Grid Margin="0 0 0 5">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="Кривая №: " VerticalAlignment="Center"/>
+                        <ComboBox Grid.Column="1" SelectedIndex="{Binding PathIndex, Mode=TwoWay}" ItemsSource="{Binding PathIndexes}"/>
+                    </Grid>
+                    <Grid Margin="0 0 0 5">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="Длина кривой: " />
+                        <TextBox Grid.Column="1" Text="{Binding PathLength, Mode=OneWay}" IsReadOnly="True" Background="Transparent" BorderThickness="0" TextWrapping="Wrap"/>
+                    </Grid>
+                </StackPanel>
+            </GroupBox>
+            <GroupBox Header="Точки" Margin="0 0 0 5">
+                <Grid>
+                    <TextBlock HorizontalAlignment="Center" Text="Точек не обнаружено" Visibility="{Binding IsPointsEmpty}"/>
+                    <ScrollViewer MaxHeight="300" VerticalScrollBarVisibility="Auto">
+                        <ItemsControl ItemsSource="{Binding Points}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.Resources>
+                                <DataTemplate DataType="{x:Type local:SvgPoint}">
+                                    <Grid ToolTip="{Binding Description}">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <CheckBox IsChecked="{Binding IsSelected, Mode=TwoWay}" IsEnabled="{Binding SelectingEnabled}"/>
+                                        <Rectangle Width="15" Height="15" Stroke="{Binding Stroke}" Fill="{Binding Fill}" StrokeThickness="1" Grid.Column="1"/>
+                                        <TextBlock Text="{Binding PointInfo}" Grid.Column="2"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </ItemsControl.Resources>
+                        </ItemsControl>
+                    </ScrollViewer>
+                </Grid>
+            </GroupBox>
+            <GroupBox Header="Отображение" Margin="0 0 0 5" Padding="3">
+                <StackPanel>
+                    <Grid Margin="0 0 0 5">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Text="Размер узлов: "/>
+                        <Slider Minimum="1" Maximum="3" Value="{Binding Source={x:Static local:SvgPoint.Instance}, Path=PointSize, Mode=TwoWay}" Grid.Column="1" TickFrequency="0.5"/>
+                    </Grid>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Text="Толщина линии: "/>
+                        <Slider Minimum="0.2" Maximum="1" Value="{Binding PathThickness, Mode=TwoWay}" Grid.Column="1" TickFrequency="0.5"/>
+                    </Grid>
+                </StackPanel>
+            </GroupBox>
+            <GroupBox Header="GCode" Margin="0 0 0 5" Padding="3">
+                <StackPanel>
+                    <Grid Margin="0 0 0 5">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Text="Зона безопасности: "/>
+                        <TextBox Text="{Binding YSafe, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" Grid.Column="1" TextAlignment="Right"/>
+                        <TextBlock Text=" мм" Grid.Column="2"/>
+                    </Grid>
+                    <Grid Margin="0 0 0 5">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Text="Ширина ленты: "/>
+                        <TextBox Text="{Binding LineWidth, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" Grid.Column="1" TextAlignment="Right"/>
+                        <TextBlock Text=" мм" Grid.Column="2"/>
+                    </Grid>
+                    <Grid Margin="0 0 0 5">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Text="Z0 это: " VerticalAlignment="Center"/>
+                        <ComboBox Grid.Column="1"  SelectedIndex="{Binding CutBehaviour, Mode=TwoWay, Converter={x:Static local:Z0InfoToSelectedIndexConverter.Instance}}">
+                            <ComboBoxItem Content="Стол"/>
+                            <ComboBoxItem Content="Заготовка"/>
+                        </ComboBox>
+                    </Grid>
+                    <Grid Margin="0 0 0 5">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Text="Высота ленты: "/>
+                        <TextBox Text="{Binding LineHeight, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" Grid.Column="1" TextAlignment="Right"/>
+                        <TextBlock Text=" мм" Grid.Column="2"/>
+                    </Grid>
+                    <Grid Margin="0 0 0 5">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Text="Прорезать на: "/>
+                        <TextBox Text="{Binding CutHeight, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" Grid.Column="1" TextAlignment="Right"/>
+                        <TextBlock Text=" мм" Grid.Column="2"/>
+                    </Grid>
+                    <Grid Margin="0 0 0 5">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Text="Отступ побокам: "/>
+                        <TextBox Text="{Binding WidthOffset, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" Grid.Column="1" TextAlignment="Right"/>
+                        <TextBlock Text=" мм" Grid.Column="2"/>
+                    </Grid>
+                    <CheckBox Content="Обрезать вконце" IsChecked="{Binding DoCutAtEnd, Mode=TwoWay}" HorizontalAlignment="Left" Margin="0 0 0 5"/>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Button Command="{Binding ExportCommand}" Content="Экспорт GCode" Padding="2" Margin="0 0 2.5 0"/>
+                        <Button Command="{Binding ResetCommand}" Content="Сбросить" Padding="2" Margin="2.5 0 0 0" Grid.Column="1"/>
+                    </Grid>
+                </StackPanel>
+            </GroupBox>
+        </StackPanel>
+    </Grid>
+</Window>
