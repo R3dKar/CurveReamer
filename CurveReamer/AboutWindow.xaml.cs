@@ -27,7 +27,7 @@ namespace CurveReamer
 
         private void NavigateGitHub(object sender, MouseButtonEventArgs e)
         {
-            Process.Start("https://github.com/R3dKar");
+            Process.Start("https://github.com/R3dKar/CurveReamer");
         }
 
         private void NavigateSteam(object sender, MouseButtonEventArgs e)
