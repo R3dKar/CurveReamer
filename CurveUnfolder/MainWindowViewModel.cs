@@ -7,7 +7,6 @@ using System.Windows;
 using System.IO;
 using Microsoft.Win32;
 using System.Windows.Media;
-using System;
 
 namespace CurveUnfolder
 {
