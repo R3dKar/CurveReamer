@@ -1,4 +1,4 @@
-﻿namespace CurveReamer
+﻿namespace CurveUnfolder
 {
     public abstract class PathSegment
     {

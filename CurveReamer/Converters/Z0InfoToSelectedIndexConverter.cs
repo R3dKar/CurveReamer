@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.Windows.Data;
 
-namespace CurveReamer
+namespace CurveUnfolder
 {
     class Z0InfoToSelectedIndexConverter : IValueConverter
     {

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Input;
 
-namespace CurveReamer
+namespace CurveUnfolder
 {
     public class RelayCommand : ICommand
     {

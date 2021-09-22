@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Input;
 
-namespace CurveReamer
+namespace CurveUnfolder
 {
     /// <summary>
     /// Логика взаимодействия для MainWindow.xaml

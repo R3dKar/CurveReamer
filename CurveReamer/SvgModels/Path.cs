@@ -5,7 +5,7 @@ using System.Drawing;
 using System.Text.RegularExpressions;
 using System.Globalization;
 
-namespace CurveReamer
+namespace CurveUnfolder
 {
     public class Path
     {

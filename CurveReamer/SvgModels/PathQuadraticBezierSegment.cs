@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 
-namespace CurveReamer
+namespace CurveUnfolder
 {
     public class PathQuadraticBezierSegment : PathSegment
     {

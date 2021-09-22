@@ -4,7 +4,7 @@ using System.Text.RegularExpressions;
 using System.Xml.Linq;
 using System.Globalization;
 
-namespace CurveReamer
+namespace CurveUnfolder
 {
     public class SvgDocument
     {

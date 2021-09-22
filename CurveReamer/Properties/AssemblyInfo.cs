@@ -7,11 +7,11 @@ using System.Windows;
 // Общие сведения об этой сборке предоставляются следующим набором
 // набор атрибутов. Измените значения этих атрибутов, чтобы изменить сведения,
 // связанные со сборкой.
-[assembly: AssemblyTitle("CurveReamer")]
-[assembly: AssemblyDescription("Reaming curves...")]
+[assembly: AssemblyTitle("CurveUnfolder")]
+[assembly: AssemblyDescription("Unfolding curves...")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("R3dKar Enterprise Incorporation Industries Ltd & Co.")]
-[assembly: AssemblyProduct("CurveReamer")]
+[assembly: AssemblyProduct("CurveUnfolder")]
 [assembly: AssemblyCopyright("")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

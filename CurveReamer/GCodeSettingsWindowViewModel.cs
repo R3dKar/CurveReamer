@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Windows;
 
-namespace CurveReamer
+namespace CurveUnfolder
 {
     public class GCodeSettingsWindowViewModel : INotifyPropertyChanged
     {

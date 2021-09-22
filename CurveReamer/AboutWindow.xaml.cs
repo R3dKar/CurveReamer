@@ -12,7 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace CurveReamer
+namespace CurveUnfolder
 {
     /// <summary>
     /// Логика взаимодействия для AboutWindow.xaml
@@ -27,7 +27,7 @@ namespace CurveReamer
 
         private void NavigateGitHub(object sender, MouseButtonEventArgs e)
         {
-            Process.Start("https://github.com/R3dKar/CurveReamer");
+            Process.Start("https://github.com/R3dKar/CurveUnfolder");
         }
 
         private void NavigateSteam(object sender, MouseButtonEventArgs e)

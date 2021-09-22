@@ -9,7 +9,7 @@ using Microsoft.Win32;
 using System.Windows.Media;
 using System;
 
-namespace CurveReamer
+namespace CurveUnfolder
 {
     public class MainWindowViewModel : INotifyPropertyChanged
     {

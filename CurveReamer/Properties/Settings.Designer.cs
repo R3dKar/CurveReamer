@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace CurveReamer.Properties {
+namespace CurveUnfolder.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
@@ -26,9 +26,9 @@ namespace CurveReamer.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Table")]
-        public global::CurveReamer.Z0Info CutBehaviour {
+        public global::CurveUnfolder.Z0Info CutBehaviour {
             get {
-                return ((global::CurveReamer.Z0Info)(this["CutBehaviour"]));
+                return ((global::CurveUnfolder.Z0Info)(this["CutBehaviour"]));
             }
             set {
                 this["CutBehaviour"] = value;
@@ -158,9 +158,9 @@ namespace CurveReamer.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Milliliter")]
-        public global::CurveReamer.ValueMeassureUnits ValueUnits {
+        public global::CurveUnfolder.ValueMeassureUnits ValueUnits {
             get {
-                return ((global::CurveReamer.ValueMeassureUnits)(this["ValueUnits"]));
+                return ((global::CurveUnfolder.ValueMeassureUnits)(this["ValueUnits"]));
             }
             set {
                 this["ValueUnits"] = value;
