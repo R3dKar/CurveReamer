@@ -97,18 +97,39 @@ namespace CurveUnfolder
             foreach (var path in paths)
                 Paths.AddRange(Path.Parse(path));
 
-            Path main = null;
-            double[] mainDimensions = new double[4] { 0, 0, 0, 0 };
-            foreach (var path in Paths)
-            {
-                double[] pathDimensions = path.GetSize();
-                if ((mainDimensions[2] - mainDimensions[0]) * (mainDimensions[3] - mainDimensions[1]) < (pathDimensions[2] - pathDimensions[0]) * (pathDimensions[3] - pathDimensions[1]))
+            List<Path> MainPaths = new List<Path>();
+            if (Paths.Count < 2)
+                MainPaths.AddRange(Paths);
+            else
+                for (int i = 0; i < Paths.Count; i++)
                 {
-                    main = path;
-                    mainDimensions = pathDimensions;
+                    if (MainPaths.Count == 0)
+                    {
+                        MainPaths.Add(Paths[i]);
+                        continue;
+                    }
+
+                    bool addMain = true;
+                    for (int j = 0; j < MainPaths.Count; j++)
+                    {
+                        bool? r = MainPaths[j].AddChild(Paths[i]);
+                        if (r == true)
+                        {
+                            addMain = false;
+                            break;
+                        }
+                        else if (r == false)
+                            MainPaths.RemoveAt(j--);
+                    }
+
+                    if (addMain)
+                        MainPaths.Add(Paths[i]);
                 }
-            }
-            Area = main.GetArea(Paths) * scale * scale;
+
+            foreach (var path in MainPaths)
+                Area += path.GetArea();
+
+            Area *= scale * scale;
 
             foreach (var path in Paths)
                 path.Scale(scale);
@@ -119,6 +140,8 @@ namespace CurveUnfolder
                 path.Translate(-size[0], -size[1]);
             }
         }
+
+
 
         private static double GetDimensionValue(string value)
         {

@@ -11,9 +11,12 @@ namespace CurveUnfolder
         public bool Closed { get; private set; } = false;
         public List<PathSegment> Segments { get; private set; }
 
+        public List<Path> Children { get; private set; }
+
         private Path()
         {
             Segments = new List<PathSegment>();
+            Children = new List<Path>();
         }
 
         public static List<Path> Parse(string pathData)
@@ -180,29 +183,13 @@ namespace CurveUnfolder
             double area = 0;
             for (int i = 0; i < points.Count; i++)
             {
-                area += (points[i].Y + points[(i + 1) % points.Count].Y) * (points[i].X - points[(i + 1) % points.Count].X) * 0.5; 
+                area += (points[i].Y + points[(i + 1) % points.Count].Y) * (points[i].X - points[(i + 1) % points.Count].X) * 0.5;
             }
+            area = Math.Abs(area);
 
-            return Math.Abs(area);
-        }
-
-        public double GetArea(List<Path> figures)
-        {
-            List<Path> inner = new List<Path>();
-            double[] thisSize = GetSize();
-            double area = GetArea();
-
-            foreach (var figure in figures)
+            foreach (var ch in Children)
             {
-                if (figure == this || !figure.Closed)
-                    continue;
-                double[] figureSize = figure.GetSize();
-                if (thisSize[0] <= figureSize[0] && thisSize[1] <= figureSize[1] && thisSize[2] >= figureSize[2] && thisSize[3] >= figureSize[3])
-                {
-                    inner.Add(figure);
-                }
-
-                area -= figure.GetArea(inner);
+                area -= ch.GetArea();
             }
 
             return area;
@@ -231,6 +218,51 @@ namespace CurveUnfolder
                 pathString += " Z";
 
             return pathString;
+        }
+
+        public bool? AddChild(Path child)
+        {
+            if (child == null)
+                return null;
+            if (child == this)
+                return null;
+
+            double[] childSize = child.GetSize();
+            double[] size = GetSize();
+
+            if (size[0] >= childSize[0] && size[1] >= childSize[1] && size[2] <= childSize[2] && size[3] <= childSize[3])
+            {
+                child.AddChild(this);
+                return false;
+            }
+            else if (size[0] > childSize[0] || size[1] > childSize[1] || size[2] < childSize[2] || size[3] < childSize[3])
+                return null;
+            else
+            {
+                for (int i = 0; i < Children.Count; i++)
+                {
+                    bool? res = Children[i].AddChild(child);
+                    if (res == true)
+                        return true;
+                    else if (res == false)
+                    {
+                        Children.RemoveAt(i);
+                        Children.Add(child);
+                        for (int j = 0; j < Children.Count; j++)
+                        {
+                            if (Children[j] == child)
+                                continue;
+                            res = child.AddChild(Children[j]);
+                            if (res == true)
+                                Children.RemoveAt(j--);
+                        }
+                        return true;
+                    }
+                }
+
+                Children.Add(child);
+                return true;
+            }
         }
 
         public Path Clone()
