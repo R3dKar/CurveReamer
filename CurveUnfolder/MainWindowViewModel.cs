@@ -413,7 +413,7 @@ namespace CurveUnfolder
 
         public MainWindowViewModel()
         {
-            ImportCommand = new RelayCommand(Import);
+            ImportCommand = new RelayCommand(() => Import());
             ExportCommand = new RelayCommand(Export, () => SvgFile != null);
             ExitCommand = new RelayCommand(Exit);
             ResetCommand = new RelayCommand(Reset);
@@ -434,31 +434,36 @@ namespace CurveUnfolder
             FloorHeight = Properties.Settings.Default.FloorHeight;
         }
 
-        private void Import()
+        public void Import(string filename="")
         {
-            OpenFileDialog openDialog = new OpenFileDialog();
-            openDialog.CheckFileExists = true;
-            openDialog.AddExtension = true;
-            openDialog.Filter = "SVG (*.svg)|*.svg|Все файлы (*.*)|*.*";
-
-            if (openDialog.ShowDialog(Owner) == true)
+            if (string.IsNullOrEmpty(filename))
             {
-                var svg = new SvgDocument();
-                try
-                {
-                    svg.Load(openDialog.FileName);
-                }
-                catch
-                {
-                    MessageBox.Show(Owner, "При чтении файла произошла ошибка", "Ошибка чтения файла", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
-                    return;
-                }
+                OpenFileDialog openDialog = new OpenFileDialog();
+                openDialog.CheckFileExists = true;
+                openDialog.AddExtension = true;
+                openDialog.Filter = "SVG (*.svg)|*.svg|Все файлы (*.*)|*.*";
 
-                if (svg.Paths.Count == 0)
-                    MessageBox.Show(Owner, "Кривые не найдены!", "Ошибка чтения файла", MessageBoxButton.OK, MessageBoxImage.Exclamation, MessageBoxResult.OK);
+                if (openDialog.ShowDialog(Owner) == true)
+                    filename = openDialog.FileName;
                 else
-                    SvgFile = svg;
+                    return;
             }
+
+            var svg = new SvgDocument();
+            try
+            {
+                svg.Load(filename);
+            }
+            catch
+            {
+                MessageBox.Show(Owner, "При чтении файла произошла ошибка", "Ошибка чтения файла", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
+                return;
+            }
+
+            if (svg.Paths.Count == 0)
+                MessageBox.Show(Owner, "Кривые не найдены!", "Ошибка чтения файла", MessageBoxButton.OK, MessageBoxImage.Exclamation, MessageBoxResult.OK);
+            else
+                SvgFile = svg;
         }
 
         private void Export()

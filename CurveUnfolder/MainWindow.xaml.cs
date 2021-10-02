@@ -23,5 +23,15 @@ namespace CurveUnfolder
         {
             (DataContext as MainWindowViewModel).SetStartingPoint(((sender as System.Windows.Shapes.Path).DataContext as SvgPoint));
         }
+
+        private void WindowOnDragDrop(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+                var file = files[0];
+                (DataContext as MainWindowViewModel).Import(file);
+            }
+        }
     }
 }

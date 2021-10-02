@@ -126,13 +126,11 @@ namespace CurveUnfolder
                         MainPaths.Add(Paths[i]);
                 }
 
-            foreach (var path in MainPaths)
-                Area += path.GetArea();
-
-            Area *= scale * scale;
-
             foreach (var path in Paths)
                 path.Scale(scale);
+
+            foreach (var path in MainPaths)
+                Area += path.GetArea();
 
             foreach (var path in Paths)
             {

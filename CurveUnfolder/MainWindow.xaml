@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CurveUnfolder"
         mc:Ignorable="d"
-        Title="Curve Unfolder" MinHeight="72" MinWidth="800" Height="720" Width="800">
+        Title="Curve Unfolder" MinHeight="72" MinWidth="800" Height="720" Width="800" AllowDrop="True" Drop="WindowOnDragDrop">
     <Window.DataContext>
         <local:MainWindowViewModel/>
     </Window.DataContext>
